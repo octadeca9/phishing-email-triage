@@ -1,0 +1,14 @@
+{
+  "message_id": "<msg-0042@payr0ll-notice.invalid>",
+  "from_display_name": "Finance Operations",
+  "from_address": "notice@payr0ll-notice.invalid",
+  "return_path": "bounce@mailer.invalid",
+  "reply_to": "payment-review@reply-handler.invalid",
+  "to": ["finance01@corp.test", "finance02@corp.test"],
+  "subject": "Action Required: Review Pending Payment",
+  "date": "2026-09-18T09:12:10Z",
+  "authentication_results": {"spf": "pass", "dkim": "none", "dmarc": "fail"},
+  "received_chain": [
+    {"timestamp": "2026-09-18T09:12:09Z", "from_host": "relay-07.mailer.invalid", "source_ip": "192.0.2.45"}
+  ]
+}

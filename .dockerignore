@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+*.md
+docs/
+tests/
+__pycache__/
+*.pyc
+.DS_Store
+# Never let the private answer key leak into a build context other than the
+# validator's own. The validator image receives it via a runtime secret.
+validator/answer_key.private.json

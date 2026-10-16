@@ -1,0 +1,41 @@
+Return-Path: <bounce@mailer.invalid>
+Received: from relay-07.mailer.invalid (relay-07.mailer.invalid [192.0.2.45])
+	by mx.corp.test with ESMTPS id msg-0042;
+	Thu, 18 Sep 2026 09:12:09 +0000 (UTC)
+Authentication-Results: mx.corp.test;
+	spf=pass smtp.mailfrom=mailer.invalid;
+	dkim=none;
+	dmarc=fail (p=reject) header.from=payr0ll-notice.invalid
+Message-ID: <msg-0042@payr0ll-notice.invalid>
+Date: Thu, 18 Sep 2026 09:12:10 +0000
+From: "Finance Operations" <notice@payr0ll-notice.invalid>
+Reply-To: payment-review@reply-handler.invalid
+To: finance01@corp.test, finance02@corp.test
+Subject: Action Required: Review Pending Payment
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="synthetic-boundary-0042"
+
+--synthetic-boundary-0042
+Content-Type: text/plain; charset="utf-8"
+
+Hello Finance Team,
+
+A payment document is waiting for review. Please use the following address:
+
+hxxps://secure-document[.]invalid/review/CASE-0042
+
+If you have questions, reply to payment-review@reply-handler.invalid.
+
+Synthetic training artifact. Do not visit or resolve the defanged URL.
+
+--synthetic-boundary-0042
+Content-Type: application/pdf; name="Payment_Advice.pdf"
+Content-Disposition: attachment; filename="Payment_Advice.pdf"
+Content-Transfer-Encoding: base64
+X-Synthetic-Note: Metadata-only artifact; no payload is present in this training file.
+X-Observed-Content-Type: application/zip
+X-Attachment-SHA256: a1b2c3d4e5f60718293a4b5c6d7e8f901122334455667788990011223344abcd
+
+[REDACTED — no attachment payload exists in this synthetic lab]
+
+--synthetic-boundary-0042--

@@ -1,0 +1,3 @@
+{"event_id":"gw-0001","timestamp":"2026-09-18T09:12:11Z","event_type":"message_received","message_id":"<msg-0042@payr0ll-notice.invalid>","recipient":"finance01@corp.test","action":"accepted","source":"synthetic_gateway"}
+{"event_id":"gw-0002","timestamp":"2026-09-18T09:12:14Z","event_type":"message_delivered","message_id":"<msg-0042@payr0ll-notice.invalid>","recipient":"finance01@corp.test","action":"delivered","source":"synthetic_gateway"}
+{"event_id":"gw-0003","timestamp":"2026-09-18T09:12:16Z","event_type":"message_delivered","message_id":"<msg-0042@payr0ll-notice.invalid>","recipient":"finance02@corp.test","action":"delivered","source":"synthetic_gateway"}

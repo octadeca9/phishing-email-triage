@@ -1,0 +1,30 @@
+# --- Internal source documents: do NOT publish to GitHub ---------------------
+# The authoritative PRD and Blueprint stay internal by request.
+PRD_SOC_Phishing_Email_Triage_Medium_RedLimit.md
+Blueprint_Docker_Compose_SOC_Phishing_Email_Triage_Medium_RedLimit.md
+# These docs/ files are only pointer stubs to the two files above; excluded so
+# they don't become broken links in the published repo.
+docs/PRD.md
+docs/BLUEPRINT.md
+
+# --- Secrets: the private answer key must never be committed ------------------
+# In production it is supplied to the validator via a secret mount at runtime.
+validator/answer_key.private.json
+.env
+
+# --- Python ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# --- OS ----------------------------------------------------------------------
+.DS_Store
+
+# --- Claude / assistant tooling: do NOT publish to GitHub ---------------------
+# Any Claude-related file or folder stays internal by request.
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+**/CLAUDE.md
+.claude.json
+.mcp.json

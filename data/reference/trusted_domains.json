@@ -1,0 +1,5 @@
+{
+  "organization_domains": ["corp.test"],
+  "trusted_partner_domains": ["payroll-notice.test"],
+  "notes": "Mail legitimately originating from these domains is expected. Any sender domain outside this list — especially one that visually resembles a trusted domain (homoglyphs, digit-for-letter swaps, or a different TLD) — should be treated as a possible lookalike/impersonation and corroborated with authentication results and alignment."
+}

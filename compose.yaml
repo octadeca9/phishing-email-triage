@@ -1,0 +1,54 @@
+services:
+  lab:
+    build:
+      context: ./runtime
+      dockerfile: Dockerfile
+    image: redlimit/phishing-email-triage-lab:1.0
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+      - /home/lab:rw,noexec,nosuid,size=16m
+    volumes:
+      - ./data:/data:ro
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    mem_limit: 256m
+    cpus: 0.50
+    networks: [lab_internal]
+    command: ["sh"]
+    restart: "no"
+
+  validator:
+    build:
+      context: ./validator
+      dockerfile: Dockerfile
+    image: redlimit/phishing-email-triage-validator:1.0
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 100
+    mem_limit: 256m
+    cpus: 0.50
+    expose: ["8080"]
+    networks: [lab_internal]
+    restart: "no"
+    # Development only; never mount this secret into the participant runtime.
+    secrets: [answer_key]
+
+networks:
+  lab_internal:
+    internal: true
+
+secrets:
+  answer_key:
+    file: ./validator/answer_key.private.json

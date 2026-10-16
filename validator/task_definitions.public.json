@@ -1,0 +1,206 @@
+{
+  "challenge_id": "phishing-email-triage",
+  "version": "1.0",
+  "title": "Phishing Email Triage",
+  "difficulty": "medium",
+  "estimated_minutes": 60,
+  "total_points": 54,
+  "sections": [
+    {"section_id": "S1", "title": "Email Header & Sender Analysis"},
+    {"section_id": "S2", "title": "URL, Attachment & Correlation"},
+    {"section_id": "S3", "title": "Incident Assessment & Response"}
+  ],
+  "tasks": [
+    {
+      "task_id": "S1-T1",
+      "section_id": "S1",
+      "title": "Identify the Alert",
+      "prompt": "What is the alert ID reported by the secure email gateway? Enter the identifier exactly as shown in the alert.",
+      "input_type": "string",
+      "points": 3,
+      "dependencies": [],
+      "hints": ["The gateway alert is captured in case/alert.json.", "Look at the `alert_id` field."]
+    },
+    {
+      "task_id": "S1-T2",
+      "section_id": "S1",
+      "title": "Extract Sender Identity",
+      "prompt": "What is the From email address of the message (the address, not the display name)?",
+      "input_type": "string",
+      "points": 3,
+      "dependencies": ["S1-T1"],
+      "hints": ["See case/email_headers.json.", "The display name and the actual address are different things — report the address."]
+    },
+    {
+      "task_id": "S1-T3",
+      "section_id": "S1",
+      "title": "Inspect Reply-To Mismatch",
+      "prompt": "Does the Reply-To domain align with the From domain?",
+      "input_type": "single_choice",
+      "options": ["aligned", "mismatch"],
+      "points": 3,
+      "dependencies": ["S1-T2"],
+      "hints": ["Compare the From and Reply-To domains.", "Look at where a reply would actually be delivered."]
+    },
+    {
+      "task_id": "S1-T4",
+      "section_id": "S1",
+      "title": "Evaluate Authentication Results",
+      "prompt": "What is the DMARC result for this message?",
+      "input_type": "single_choice",
+      "options": ["pass", "fail", "none"],
+      "points": 3,
+      "dependencies": ["S1-T2"],
+      "hints": ["Authentication results live in case/email_headers.json.", "Remember SPF pass alone does not imply DMARC pass — alignment matters."]
+    },
+    {
+      "task_id": "S1-T5",
+      "section_id": "S1",
+      "title": "Detect Lookalike Domain",
+      "prompt": "Enter the sender domain that imitates a trusted domain (the lookalike domain).",
+      "input_type": "string",
+      "points": 3,
+      "dependencies": ["S1-T2"],
+      "hints": ["Compare the From domain against reference/trusted_domains.json.", "Watch for a digit used in place of a letter."]
+    },
+    {
+      "task_id": "S1-T6",
+      "section_id": "S1",
+      "title": "Build Header Finding",
+      "prompt": "Select every header-based red flag supported by the evidence.",
+      "input_type": "multi_select",
+      "options": ["spf_pass", "dkim_signed", "dmarc_fail", "reply_to_mismatch", "lookalike_from_domain", "trusted_sender_domain"],
+      "points": 3,
+      "dependencies": ["S1-T3", "S1-T4", "S1-T5"],
+      "hints": ["A red flag is an indicator consistent with impersonation.", "SPF passing is not itself a red flag — focus on alignment, Reply-To, and the sender domain."]
+    },
+    {
+      "task_id": "S2-T1",
+      "section_id": "S2",
+      "title": "Extract the Primary URL",
+      "prompt": "Enter the primary URL from the email body, in its defanged form, exactly as written.",
+      "input_type": "string",
+      "points": 3,
+      "dependencies": [],
+      "hints": ["The URL is in case/email_body.txt.", "Keep it defanged — do not re-fang hxxps or [.]."]
+    },
+    {
+      "task_id": "S2-T2",
+      "section_id": "S2",
+      "title": "Identify URL Red Flags",
+      "prompt": "Select every URL red flag supported by the evidence.",
+      "input_type": "multi_select",
+      "options": ["untrusted_host_domain", "credential_or_document_lure_path", "uses_https", "trusted_host_domain", "ip_address_host"],
+      "points": 3,
+      "dependencies": ["S2-T1"],
+      "hints": ["Check the host domain against the trusted domain list.", "Consider what the path is luring the user to do; note that TLS alone is not a safety signal."]
+    },
+    {
+      "task_id": "S2-T3",
+      "section_id": "S2",
+      "title": "Inspect Attachment Metadata",
+      "prompt": "Does the attachment's declared content type match its observed content type?",
+      "input_type": "single_choice",
+      "options": ["match", "mismatch"],
+      "points": 3,
+      "dependencies": [],
+      "hints": ["See case/attachment_manifest.json.", "Compare declared_content_type with observed_content_type."]
+    },
+    {
+      "task_id": "S2-T4",
+      "section_id": "S2",
+      "title": "Verify File Hash",
+      "prompt": "Enter the SHA-256 of the attachment as recorded in the manifest.",
+      "input_type": "string",
+      "points": 3,
+      "dependencies": ["S2-T3"],
+      "hints": ["See the `sha256` field in case/attachment_manifest.json.", "A SHA-256 is 64 hexadecimal characters."]
+    },
+    {
+      "task_id": "S2-T5",
+      "section_id": "S2",
+      "title": "Correlate Gateway Events",
+      "prompt": "To how many recipients was this message delivered, according to the gateway events?",
+      "input_type": "number",
+      "points": 3,
+      "dependencies": [],
+      "hints": ["See case/gateway_events.jsonl.", "Count distinct recipients with a message_delivered event for this message_id."]
+    },
+    {
+      "task_id": "S2-T6",
+      "section_id": "S2",
+      "title": "Determine User Exposure",
+      "prompt": "What is the furthest level of user exposure reached across all recipients?",
+      "input_type": "single_choice",
+      "options": ["not_delivered", "delivered_not_opened", "opened_no_click", "clicked_blocked", "clicked_submitted"],
+      "points": 3,
+      "dependencies": ["S2-T5"],
+      "hints": ["Correlate the gateway, mailbox, and proxy logs.", "Check whether any click occurred and whether it was blocked or led to credential submission."]
+    },
+    {
+      "task_id": "S3-T1",
+      "section_id": "S3",
+      "title": "Build Incident Timeline",
+      "prompt": "Order every event_id (across gateway, mailbox, and proxy logs) from earliest to latest by timestamp.",
+      "input_type": "ordering",
+      "options": ["gw-0001", "gw-0002", "gw-0003", "mb-0001", "px-0001"],
+      "points": 3,
+      "dependencies": ["S2-T6"],
+      "hints": ["Collect events from all three logs.", "Sort strictly by the ISO 8601 timestamp."]
+    },
+    {
+      "task_id": "S3-T2",
+      "section_id": "S3",
+      "title": "Assess Credential Risk",
+      "prompt": "What is the credential-harvesting outcome supported by the evidence?",
+      "input_type": "single_choice",
+      "options": ["no_interaction", "attempted_blocked", "credentials_submitted"],
+      "points": 3,
+      "dependencies": ["S2-T6"],
+      "hints": ["A click occurred — check what happened next in the proxy log.", "Look at the action and credential_submission indicator."]
+    },
+    {
+      "task_id": "S3-T3",
+      "section_id": "S3",
+      "title": "Determine Severity",
+      "prompt": "Select the proportionate incident severity.",
+      "input_type": "single_choice",
+      "options": ["low", "medium", "high", "critical"],
+      "points": 3,
+      "dependencies": ["S3-T2"],
+      "hints": ["Weigh confirmed phishing and a click against the fact that it was blocked with no credential submission.", "Do not default to high without supporting exposure."]
+    },
+    {
+      "task_id": "S3-T4",
+      "section_id": "S3",
+      "title": "Select Incident Verdict",
+      "prompt": "Select the incident verdict.",
+      "input_type": "single_choice",
+      "options": ["benign", "suspicious", "phishing"],
+      "points": 3,
+      "dependencies": ["S3-T3"],
+      "hints": ["Weigh the combined header, URL, attachment, and exposure evidence.", "A confirmed impersonation with a malicious lure is not merely suspicious."]
+    },
+    {
+      "task_id": "S3-T5",
+      "section_id": "S3",
+      "title": "Recommend Containment Actions",
+      "prompt": "Select the proportionate containment / escalation actions.",
+      "input_type": "multi_select",
+      "options": ["quarantine_related_messages", "block_ioc_at_email_gateway", "notify_affected_users", "wipe_all_endpoints", "shut_down_mail_server", "no_action_required"],
+      "points": 3,
+      "dependencies": ["S3-T4"],
+      "hints": ["Choose actions proportionate to a blocked click with no credential submission.", "Avoid disproportionate actions that would disrupt the whole organization."]
+    },
+    {
+      "task_id": "S3-T6",
+      "section_id": "S3",
+      "title": "Submit Final Triage Report",
+      "prompt": "Submit the structured final triage report. Required fields: case_id, verdict, severity, confidence, user_exposure, key_evidence (list), recommended_actions (list), rationale.",
+      "input_type": "report",
+      "points": 3,
+      "dependencies": ["S3-T1", "S3-T2", "S3-T3", "S3-T4", "S3-T5"],
+      "hints": ["Reuse your answers from the verdict, severity, and exposure tasks.", "key_evidence should name the concrete indicators you relied on."]
+    }
+  ]
+}

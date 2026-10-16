@@ -1,0 +1,1 @@
+{"event_id":"px-0001","timestamp":"2026-09-18T09:19:41Z","event_type":"url_click_simulated","user":"finance01@corp.test","url":"hxxps://secure-document[.]invalid/review/CASE-0042","action":"blocked_by_simulator","source":"synthetic_proxy","credential_submission":false}

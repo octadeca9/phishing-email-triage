@@ -1,0 +1,10 @@
+{
+  "alert_id": "PHISH-2026-0042",
+  "source": "Synthetic Secure Email Gateway",
+  "rule_name": "Potential Sender Impersonation",
+  "severity": "medium",
+  "message_id": "<msg-0042@payr0ll-notice.invalid>",
+  "recipient_count": 2,
+  "initial_action": "delivered_for_review",
+  "detected_at": "2026-09-18T09:12:17Z"
+}

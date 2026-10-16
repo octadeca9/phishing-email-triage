@@ -1,0 +1,9 @@
+Hello Finance Team,
+
+A payment document is waiting for review. Please use the following address:
+
+hxxps://secure-document[.]invalid/review/CASE-0042
+
+If you have questions, reply to payment-review@reply-handler.invalid.
+
+Synthetic training artifact. Do not visit or resolve the defanged URL.

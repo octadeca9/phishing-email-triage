@@ -1,0 +1,25 @@
+SOC Analyst Working Notes — Case PHISH-2026-0042
+=================================================
+
+Synthetic training case. All domains use .test/.invalid, all IPs are from the
+RFC 5737 documentation range, and every URL is defanged. Nothing here is live:
+do not attempt to visit URLs or open attachments.
+
+Observed so far
+---------------
+- Gateway alert raised: "Potential Sender Impersonation" (severity: medium).
+- Sender display name claims "Finance Operations" but the From domain is not an
+  organization or trusted partner domain (see reference/trusted_domains.json).
+- Authentication results are mixed: SPF pass, but DKIM none and DMARC fail.
+  Reminder: SPF pass alone does not make an email safe — check alignment.
+- Reply-To points to a different domain than From.
+- Body contains a single defanged URL leading to a generic "review" path.
+- One attachment is declared as PDF but its observed container type differs.
+- Two recipients (finance01, finance02). Delivery, open, and click activity is
+  captured across gateway / mailbox / proxy event logs.
+
+Open questions to resolve from the evidence
+--------------------------------------------
+- Which recipients opened the message, and did anyone click the link?
+- Was the click successful or blocked? Any sign of credential submission?
+- What is the proportionate verdict, severity, and containment response?
