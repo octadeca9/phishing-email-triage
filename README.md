@@ -61,14 +61,32 @@ phishing-email-triage/
 
 ## Quick start (Compose)
 
+The participant lab and the scoring validator are deliberately split: in
+production, **scoring and the private answer key live in the platform
+(hack.redlimit.id), not in this Compose stack**. So a plain `docker compose up`
+starts only the participant `lab`, and the `validator` service is kept behind the
+`dev` profile for local development.
+
 ```bash
 docker compose config            # validate the compose file
-docker compose build
-docker compose up -d validator   # start validator (internal-only, no host port)
+docker compose build             # build the lab image
+docker compose up -d             # deploy: start ONLY the participant lab
 docker compose run --rm lab      # drop into the participant CLI workspace
-docker compose logs -f validator
 docker compose down
 ```
+
+The validator needs the private answer-key file and is therefore **local dev
+only** — never required on the deploy host:
+
+```bash
+docker compose --profile dev up -d validator   # start validator (internal-only)
+docker compose --profile dev logs -f validator
+```
+
+> The deploy host only clones the repo, where `validator/answer_key.private.json`
+> is intentionally absent (git-ignored). Because the validator sits behind the
+> `dev` profile, a default `docker compose up` never references that secret, so
+> the deploy does not fail on the missing file.
 
 Inside the `lab` workspace, the dataset is at `/data/case` and `/data/reference`.
 Three tools are on `PATH`:

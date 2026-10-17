@@ -25,6 +25,12 @@ services:
     restart: "no"
 
   validator:
+    # DEV / REFERENCE ONLY. In production, scoring and the answer key live in the
+    # platform (hack.redlimit.id) — NOT here. This service is behind the "dev"
+    # profile so a plain `docker compose up` (e.g. on the deploy host) starts only
+    # the participant `lab` and never tries to mount the private answer-key secret.
+    # Run it locally with: docker compose --profile dev up
+    profiles: ["dev"]
     build:
       context: ./validator
       dockerfile: Dockerfile
