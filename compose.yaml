@@ -12,17 +12,20 @@ services:
     volumes:
       - ./data:/data:ro
     working_dir: /workspace
-    stdin_open: true
-    tty: true
     cap_drop: [ALL]
     security_opt:
       - no-new-privileges:true
     pids_limit: 100
     mem_limit: 256m
     cpus: 0.50
-    networks: [lab_internal]
-    command: ["sh"]
-    restart: "no"
+    # Serves the browser terminal (ttyd) on 7681. On the default (non-internal)
+    # network so the platform's web proxy can route to it. Egress restriction is
+    # the platform's network-policy job in production, not Compose's.
+    expose: ["7681"]
+    environment:
+      - PORT=7681
+    networks: [lab_web]
+    restart: unless-stopped
 
   validator:
     # DEV / REFERENCE ONLY. In production, scoring and the answer key live in the
@@ -52,6 +55,10 @@ services:
     secrets: [answer_key]
 
 networks:
+  # Participant web terminal: reachable by the platform's ingress proxy.
+  lab_web:
+    driver: bridge
+  # Validator stays on an internal-only network (dev profile; no host/web reach).
   lab_internal:
     internal: true
 

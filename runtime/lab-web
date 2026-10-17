@@ -1,0 +1,8 @@
+#!/bin/sh
+# Serve the locked-down lab shell over HTTP via ttyd so the workspace is
+# reachable in a browser on the deploy platform (ngelinx.com).
+#
+# --writable lets the participant type into the terminal (chosen: no auth).
+# PORT is honored if the platform injects it, otherwise defaults to 7681.
+set -eu
+exec ttyd --port "${PORT:-7681}" --interface 0.0.0.0 --writable lab-shell

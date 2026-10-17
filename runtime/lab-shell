@@ -1,0 +1,11 @@
+#!/bin/sh
+# Per-session shell launched by ttyd for each browser connection.
+printf '%s\n' '================================================================'
+printf '%s\n' ' Phishing Email Triage — Medium  (web terminal)'
+printf '%s\n' '----------------------------------------------------------------'
+printf '%s\n' ' Synthetic dataset only. Do NOT visit URLs or execute attachments.'
+printf '%s\n' ' Evidence : /data/case     Reference : /data/reference'
+printf '%s\n' ' Tools    : email_summary.py | parse_headers.py | timeline.py'
+printf '%s\n' ' Submit your verdict on the hack.redlimit.id dashboard.'
+printf '%s\n' '================================================================'
+exec sh

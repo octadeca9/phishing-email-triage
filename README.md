@@ -22,7 +22,7 @@ Two containers with a hard trust boundary between them:
 
 | Container | Role | Participant can touch? |
 |---|---|---|
-| **`lab`** (runtime) | CLI workspace with read-only analysis tools; mounts the dataset read-only at `/data`; non-root; no network egress. | Yes |
+| **`lab`** (runtime) | Browser-terminal workspace (`ttyd`, port 7681) with read-only analysis tools; mounts the dataset read-only at `/data`; non-root, read-only FS, caps dropped. Reachable by the platform's web proxy; egress restriction is enforced by the platform network policy in production. | Yes |
 | **`validator`** | Trusted, internal-only scoring service holding the private answer key and rubric. Exposes a conceptual HTTP API; never reachable from the `lab` container or the host. | **No** |
 
 The answer key (`validator/answer_key.private.json`) is **development only**. It
@@ -71,9 +71,15 @@ starts only the participant `lab`, and the `validator` service is kept behind th
 docker compose config            # validate the compose file
 docker compose build             # build the lab image
 docker compose up -d             # deploy: start ONLY the participant lab
-docker compose run --rm lab      # drop into the participant CLI workspace
+docker compose run --rm lab sh   # drop into a direct CLI workspace (local)
 docker compose down
 ```
+
+The `lab` service runs a **browser terminal** (`ttyd`) and exposes it on port
+`7681`, so the deploy platform's web proxy can route participants straight into
+the locked-down workspace. The container honors a `PORT` environment variable if
+the platform injects one. Access is unauthenticated by design; the container is
+still non-root, read-only, and capability-dropped.
 
 The validator needs the private answer-key file and is therefore **local dev
 only** — never required on the deploy host:
