@@ -12,6 +12,10 @@ docs/BLUEPRINT.md
 validator/answer_key.private.json
 .env
 
+# --- Solution writeup: contains full answers; keep internal ------------------
+WRITEUP_Solusi_Phishing_Email_Triage.md
+WRITEUP_*.md
+
 # --- Python ------------------------------------------------------------------
 __pycache__/
 *.py[cod]
